@@ -15,7 +15,11 @@
 # test, which stay exactly as CI builds them for release -- keeps every
 # existing assert() meaningful without rewriting 684 call sites.
 # ---------------------------------------------------------------------------
-add_compile_options(-UNDEBUG)
+if(MSVC)
+    string(REPLACE "/DNDEBUG" "" CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE}")
+else()
+    add_compile_options(-UNDEBUG)
+endif()
 
 # EoS Unit Tests
 # --- test_board_configs: Board YAML schema shape ---
