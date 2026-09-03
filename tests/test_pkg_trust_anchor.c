@@ -23,6 +23,11 @@
  */
 
 #include <stdio.h>
+#ifndef _WIN32
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#endif
 #include <stdlib.h>
 #include <string.h>
 
@@ -125,7 +130,16 @@ static void write_eapp(const char *path,
     eos_sha256_update(&c, payload, payload_len);
     eos_sha256_final(&c, h.hash);
 
+#ifdef _WIN32
     f = fopen(path, "wb");
+#else
+    {
+        int fd = open(path, O_CREAT | O_WRONLY | O_TRUNC, S_IRUSR | S_IWUSR);
+        ASSERT(fd >= 0);
+        f = fdopen(fd, "wb");
+        if (!f) close(fd);
+    }
+#endif
     ASSERT(f != NULL);
     ASSERT(fwrite(&h, sizeof(h), 1, f) == 1);
     ASSERT(fwrite(payload, 1, payload_len, f) == payload_len);
