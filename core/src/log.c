@@ -10,7 +10,10 @@
 #include <time.h>
 
 #ifdef _WIN32
+#pragma warning(push)
+#pragma warning(disable: 5105)
 #include <windows.h>
+#pragma warning(pop)
 #endif
 
 static EosLogLevel g_log_level = EOS_LOG_INFO;

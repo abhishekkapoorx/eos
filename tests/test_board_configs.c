@@ -14,7 +14,10 @@
 #include <ctype.h>
 
 #ifdef _WIN32
+#pragma warning(push)
+#pragma warning(disable: 5105)
 #include <windows.h>
+#pragma warning(pop)
 #include <direct.h>
 #define PATH_LIMIT _MAX_PATH
 #else
