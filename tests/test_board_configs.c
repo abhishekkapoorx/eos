@@ -14,10 +14,14 @@
 #include <ctype.h>
 
 #ifdef _WIN32
+#if defined(_MSC_VER)
 #pragma warning(push)
 #pragma warning(disable: 5105)
+#endif
 #include <windows.h>
+#if defined(_MSC_VER)
 #pragma warning(pop)
+#endif
 #include <direct.h>
 #define PATH_LIMIT _MAX_PATH
 #else
