@@ -194,7 +194,7 @@ add_executable(test_net test_net.c)
 target_link_libraries(test_net PRIVATE eos_net)
 # The POSIX round-trip cases need the same switch the library was built with,
 # plus pthreads for the listener they connect to.
-if(NOT CMAKE_CROSSCOMPILING)
+if(NOT CMAKE_CROSSCOMPILING AND UNIX)
     target_compile_definitions(test_net PRIVATE EOS_NET_POSIX=1)
     find_package(Threads REQUIRED)
     target_link_libraries(test_net PRIVATE Threads::Threads)

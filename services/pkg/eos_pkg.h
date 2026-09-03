@@ -88,7 +88,13 @@ typedef enum {
 } eapp_arch_t;
 
 /* .eapp file header (at offset 0 of the .eapp ZIP archive manifest) */
-typedef struct __attribute__((packed)) {
+#if defined(_MSC_VER)
+#pragma pack(push, 1)
+#define EOS_EAPP_PACKED
+#else
+#define EOS_EAPP_PACKED __attribute__((packed))
+#endif
+typedef struct EOS_EAPP_PACKED {
     uint32_t magic;             /* EAPP_MAGIC */
     uint8_t  version;           /* EAPP_VERSION */
     char     name[EAPP_MAX_NAME];
@@ -108,6 +114,10 @@ typedef struct __attribute__((packed)) {
     bool     has_gui;           /* true if app has GUI mode */
     bool     has_cli;           /* true if app has CLI mode */
 } eapp_header_t;
+#if defined(_MSC_VER)
+#pragma pack(pop)
+#endif
+#undef EOS_EAPP_PACKED
 
 /* Installed package record */
 typedef struct {
