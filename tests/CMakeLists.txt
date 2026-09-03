@@ -16,7 +16,10 @@
 # existing assert() meaningful without rewriting 684 call sites.
 # ---------------------------------------------------------------------------
 if(MSVC)
-    string(REPLACE "/DNDEBUG" "" CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE}")
+    foreach(config RELEASE RELWITHDEBINFO MINSIZEREL)
+        string(REPLACE "/DNDEBUG" "" CMAKE_C_FLAGS_${config}
+               "${CMAKE_C_FLAGS_${config}}")
+    endforeach()
 else()
     add_compile_options(-UNDEBUG)
 endif()
