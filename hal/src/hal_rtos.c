@@ -12,6 +12,9 @@
 
 #include <eos/hal.h>
 #include <string.h>
+#ifdef _WIN32
+#include <windows.h>
+#endif
 
 #include "eos/hal.h"
 #if !EOS_HAL_HOSTED
@@ -20,6 +23,9 @@
 
 static volatile uint32_t systick_ms = 0;
 static bool hal_initialized = false;
+#ifdef _WIN32
+static DWORD host_start_tick = 0;
+#endif
 
 /* ================================================================
  * STM32F4 Register-Level GPIO
@@ -417,16 +423,29 @@ static void rtos_irq_enable(void) {
 }
 
 static void rtos_delay_ms(uint32_t ms) {
+#ifdef _WIN32
+    Sleep(ms);
+#else
     uint32_t start = systick_ms;
     while ((systick_ms - start) < ms) {}
+#endif
 }
 
-static uint32_t rtos_get_tick_ms(void) { return systick_ms; }
+static uint32_t rtos_get_tick_ms(void) {
+#ifdef _WIN32
+    return (uint32_t)(GetTickCount() - host_start_tick);
+#else
+    return systick_ms;
+#endif
+}
 
 void eos_hal_systick_handler(void) { systick_ms++; }
 
 static int rtos_hal_init(void) {
     systick_ms = 0;
+#ifdef _WIN32
+    host_start_tick = GetTickCount();
+#endif
     hal_initialized = true;
     return 0;
 }
