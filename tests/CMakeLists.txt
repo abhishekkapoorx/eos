@@ -20,8 +20,10 @@ if(MSVC)
         string(REPLACE "/DNDEBUG" "" CMAKE_C_FLAGS_${config}
                "${CMAKE_C_FLAGS_${config}}")
     endforeach()
+    add_compile_options("/FI${CMAKE_CURRENT_SOURCE_DIR}/assertions_enabled.h")
 else()
     add_compile_options(-UNDEBUG)
+    add_compile_options(-include "${CMAKE_CURRENT_SOURCE_DIR}/assertions_enabled.h")
 endif()
 
 # EoS Unit Tests
