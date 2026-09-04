@@ -23,7 +23,9 @@
  */
 
 #include <stdio.h>
-#ifndef _WIN32
+#ifdef _WIN32
+#include <eos/eos_windows.h>
+#else
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -130,6 +132,10 @@ static void write_eapp(const char *path,
     eos_sha256_update(&c, payload, payload_len);
     eos_sha256_final(&c, h.hash);
 
+    /* Create with 0600 rather than fopen()'s 0666 & ~umask. These fixtures
+     * are signed packages the verifier is about to trust, so a world-writable
+     * one could rewrite the payload between write and verification. Windows
+     * inherits the test build directory's ACL; that is acceptable here. */
 #ifdef _WIN32
     f = fopen(path, "wb");
 #else
