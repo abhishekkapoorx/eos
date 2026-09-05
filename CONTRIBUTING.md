@@ -33,6 +33,7 @@ python -m pip install -r requirements-dev.txt
 cmake -B build -DEOS_BUILD_TESTS=ON -DEOS_PRODUCT=vbox_test
 cmake --build build
 ctest --test-dir build --output-on-failure
+python -m pytest tests/ -v
 ```
 
 The development requirements install `pytest` and `pytest-cov`. Doxygen is
