@@ -132,10 +132,11 @@ static void write_eapp(const char *path,
     eos_sha256_update(&c, payload, payload_len);
     eos_sha256_final(&c, h.hash);
 
-    /* Create with 0600 rather than fopen()'s 0666 & ~umask. These fixtures
-     * are signed packages the verifier is about to trust, so a world-writable
-     * one could rewrite the payload between write and verification. Windows
-     * inherits the test build directory's ACL; that is acceptable here. */
+    /* POSIX creates these fixtures with 0600 so other users cannot rewrite a
+     * signed package between creation and verification. Windows has no
+     * equivalent portable CRT mode, so its branch uses the build directory's
+     * inherited ACL; this test validates package verification, not filesystem
+     * permission isolation. */
 #ifdef _WIN32
     f = fopen(path, "wb");
 #else
