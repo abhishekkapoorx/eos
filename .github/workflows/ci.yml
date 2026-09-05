@@ -90,11 +90,14 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Set up MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+
       - name: Check MSVC
         run: cl
 
       - name: Configure (MSVC)
-        run: cmake -B build -G "Visual Studio 17 2022" -A x64 -DEOS_BUILD_TESTS=ON -DEOS_PRODUCT=vbox_test
+        run: cmake -B build -G "Visual Studio 18 2026" -A x64 -DEOS_BUILD_TESTS=ON -DEOS_PRODUCT=vbox_test
 
       - name: Build
         run: cmake --build build --config Release --parallel
