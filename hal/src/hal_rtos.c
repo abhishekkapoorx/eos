@@ -421,9 +421,7 @@ static void rtos_delay_ms(uint32_t ms) {
     while ((systick_ms - start) < ms) {}
 }
 
-static uint32_t rtos_get_tick_ms(void) {
-    return hal_initialized ? systick_ms : 0;
-}
+static uint32_t rtos_get_tick_ms(void) { return systick_ms; }
 
 void eos_hal_systick_handler(void) { systick_ms++; }
 
